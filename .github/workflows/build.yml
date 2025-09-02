@@ -69,12 +69,7 @@ jobs:
           # Renomeia o arquivo gerado para plugins.json
           mv build/plugins.json $GITHUB_WORKSPACE/src/builds/plugins.json
 
-      # 8️⃣ Preservar repo.json manual
-      - name: Copy manual repo.json
-        run: |
-          cp src/builds/repo.json $GITHUB_WORKSPACE/src/builds/repo.json
-
-      # 9️⃣ Commit e push builds
+      # 8️⃣ Commit e push builds
       - name: Commit and push builds
         run: |
           cd $GITHUB_WORKSPACE/src
