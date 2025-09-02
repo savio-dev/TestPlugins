@@ -1,8 +1,6 @@
 package com.example.animesroll
 
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.LoadResponse.Companion.addEpisode
-import com.lagradost.cloudstream3.LoadResponse.Companion.newAnimeLoadResponse
 import org.jsoup.nodes.Element
 
 class AnimesRollProvider : MainAPI() {
@@ -28,11 +26,12 @@ class AnimesRollProvider : MainAPI() {
             element.toSearchResult()
         }
 
-        return newHomePageResponse(
-            list = listOf(
+        return HomePageResponse(
+            listOf(
                 HomePageList("Últimos Episódios", latest),
                 HomePageList("Lista de Animes", animeList)
-            )
+            ),
+            hasNext = false
         )
     }
 
@@ -44,30 +43,41 @@ class AnimesRollProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse {
         val document = app.get(url).document
-        val title = document.select("h1").firstOrNull()?.text() ?: ""
-        val poster = document.select("img").firstOrNull()?.attr("src")
+        val title = document.selectFirst("h1")?.text() ?: ""
+        val poster = document.selectFirst("img")?.attr("src")
 
         val episodes = document.select("div.itemlistepisode a").mapIndexed { index, ep ->
-            Episode(
-                data = ep.attr("href"),
-                name = ep.selectFirst(".titulo_episodio")?.text() ?: "Episódio ${index + 1}"
-            )
+            newEpisode {
+                this.url = ep.attr("href")
+                this.name = ep.selectFirst(".titulo_episodio")?.text() ?: "Episódio ${index + 1}"
+                this.episode = index + 1
+            }
         }
 
-        return newAnimeLoadResponse(title, url, TvType.Anime) {
+        return AnimeLoadResponse(
+            name = title,
+            url = url,
+            apiName = name,
+            type = TvType.Anime,
+            episodes = episodes,
             posterUrl = poster
-            addEpisodes(DubStatus.Subbed, episodes)
-        }
+        )
     }
 
     private fun Element.toSearchResult(isEpisode: Boolean = false): SearchResponse? {
         val link = selectFirst("a")?.attr("href") ?: return null
         val title = selectFirst("h1")?.text() ?: return null
         val poster = selectFirst("img")?.attr("src")
-        return newAnimeSearchResponse(title, link, TvType.Anime) {
-            this.posterUrl = poster
+
+        return AnimeSearchResponse(
+            name = title,
+            url = link,
+            apiName = name,
+            type = TvType.Anime,
+            posterUrl = poster
+        ).apply {
             if (isEpisode) {
-                addDubStatus(isDub = false, isSub = true)
+                addDubStatus(dubExist = false, subExist = true)
             }
         }
     }
