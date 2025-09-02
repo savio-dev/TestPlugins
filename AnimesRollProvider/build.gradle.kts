@@ -1,4 +1,4 @@
-version = 1
+version = "1.0"
 
 cloudstream {
     description = "Plugin para o site AnimesROLL"
@@ -8,13 +8,11 @@ cloudstream {
     iconUrl = "https://www.anroll.net/favicon.ico"
 }
 
-import org.gradle.jvm.tasks.Jar
-
 // Task para gerar o JAR do plugin
 tasks.register<Jar>("buildPluginJar") {
-    archiveBaseName.set("AnimesROLLPlugin") // nome do JAR
-    archiveVersion.set("1.0")               // versão do JAR
-    from(sourceSets.main.get().output)      // inclui código compilado
+    archiveBaseName.set("AnimesROLLPlugin")
+    archiveVersion.set("1.0")
+    from(project.the<SourceSetContainer>()["main"].output)
     manifest {
         attributes["Main-Class"] = "com.example.animesroll.AnimesRollProvider"
     }
