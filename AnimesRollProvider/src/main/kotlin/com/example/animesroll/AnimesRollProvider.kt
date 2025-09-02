@@ -1,6 +1,7 @@
 package com.example.animesroll
 
 import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.utils.AppUtils
 import org.jsoup.nodes.Element
 
 class AnimesRollProvider : MainAPI() {
@@ -16,15 +17,8 @@ class AnimesRollProvider : MainAPI() {
     ): HomePageResponse {
         val document = app.get(mainUrl).document
 
-        // Últimos episódios
-        val latest = document.select("div.edmaGy").mapNotNull { element ->
-            element.toSearchResult()
-        }
-
-        // Lista de animes
-        val animeList = document.select("div.jTVCGa").mapNotNull { element ->
-            element.toSearchResult()
-        }
+        val latest = document.select("div.edmaGy").mapNotNull { it.toSearchResult() }
+        val animeList = document.select("div.jTVCGa").mapNotNull { it.toSearchResult() }
 
         return newHomePageResponse(
             list = listOf(
@@ -46,19 +40,14 @@ class AnimesRollProvider : MainAPI() {
         val poster = document.selectFirst("img")?.attr("src")
 
         val episodes = document.select("div.itemlistepisode a").mapIndexed { index, ep ->
-            Episode(
-                data = ep.attr("href"),
+            newEpisode(ep.attr("href")) {
                 name = ep.text().ifBlank { "Episódio ${index + 1}" }
-            )
+            }
         }
 
-        return AnimeLoadResponse(
-            name = title,
-            url = url,
-            type = TvType.Anime,
-            episodes = episodes
-        ).apply {
+        return newAnimeLoadResponse(title, url, TvType.Anime) {
             posterUrl = poster
+            addEpisodes(DubStatus.Subbed, episodes)
         }
     }
 
@@ -66,12 +55,9 @@ class AnimesRollProvider : MainAPI() {
         val link = selectFirst("a")?.attr("href") ?: return null
         val title = selectFirst("h1")?.text() ?: return null
         val poster = selectFirst("img")?.attr("src")
-        return AnimeSearchResponse(
-            name = title,
-            url = link,
-            type = TvType.Anime
-        ).apply {
-            posterUrl = poster
+
+        return newAnimeSearchResponse(title, link, TvType.Anime) {
+            this.posterUrl = poster
         }
     }
 }
