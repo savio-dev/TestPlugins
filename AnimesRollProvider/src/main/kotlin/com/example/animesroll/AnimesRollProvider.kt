@@ -1,4 +1,4 @@
-package com.cloudstream
+package com.example.animesroll
 
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.LoadResponse.Companion.addEpisode
