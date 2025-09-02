@@ -1,7 +1,7 @@
 package com.example.animesroll
 
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.utils.AppUtils
+import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
 import org.jsoup.nodes.Element
 
 @CloudstreamPlugin
