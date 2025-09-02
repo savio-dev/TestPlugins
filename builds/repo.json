@@ -1,0 +1,8 @@
+{
+  "name": "sephiroth repo",
+  "description": "sephiroth br repository",
+  "manifestVersion": 1,
+  "pluginLists": [
+    "https://raw.githubusercontent.com/savio-dev/TestPlugins/refs/heads/master/builds/plugins.json"
+  ]
+}
