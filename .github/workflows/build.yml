@@ -26,9 +26,10 @@ jobs:
       - name: Create builds folder
         run: mkdir -p $GITHUB_WORKSPACE/src/builds
 
-      # 3️⃣ Limpar builds antigos
-      - name: Clean old builds
-        run: rm -f $GITHUB_WORKSPACE/src/builds/* || true
+      # 3️⃣ Limpar builds antigos, mantendo JSONs manuais
+      - name: Clean old builds (keep manual JSON)
+        run: |
+          find $GITHUB_WORKSPACE/src/builds/ -type f ! -name 'plugins.json' ! -name 'repo.json' -delete
 
       # 4️⃣ Setup JDK 17
       - name: Setup JDK 17
@@ -41,7 +42,7 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      # 6️⃣ Build Plugins: .cs3 e .jar
+      # 6️⃣ Build Plugin: .cs3 e .jar
       - name: Build Plugin .cs3 and JAR
         run: |
           cd $GITHUB_WORKSPACE/src
