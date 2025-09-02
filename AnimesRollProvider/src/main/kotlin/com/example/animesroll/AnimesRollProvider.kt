@@ -1,6 +1,7 @@
 package com.example.animesroll
 
 import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.utils.addDubStatus
 import org.jsoup.nodes.Element
 
 class AnimesRollProvider : MainAPI() {
@@ -10,21 +11,15 @@ class AnimesRollProvider : MainAPI() {
     override var lang = "pt"
     override val supportedTypes = setOf(TvType.Anime)
 
-    override suspend fun getMainPage(
-        page: Int,
-        request: MainPageRequest
-    ): HomePageResponse {
+    // Página inicial
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(mainUrl).document
 
         // Últimos episódios
-        val latest = document.select("div.edmaGy").mapNotNull { element ->
-            element.toSearchResult(isEpisode = true)
-        }
+        val latest = document.select("div.edmaGy").mapNotNull { it.toSearchResult(isEpisode = true) }
 
         // Lista de animes
-        val animeList = document.select("div.jTVCGa").mapNotNull { element ->
-            element.toSearchResult()
-        }
+        val animeList = document.select("div.jTVCGa").mapNotNull { it.toSearchResult() }
 
         return HomePageResponse(
             listOf(
@@ -35,17 +30,20 @@ class AnimesRollProvider : MainAPI() {
         )
     }
 
+    // Pesquisa
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/?s=$query"
         val document = app.get(url).document
         return document.select("div.jTVCGa").mapNotNull { it.toSearchResult() }
     }
 
+    // Carrega detalhes do anime e episódios
     override suspend fun load(url: String): LoadResponse {
         val document = app.get(url).document
         val title = document.selectFirst("h1")?.text() ?: ""
         val poster = document.selectFirst("img")?.attr("src")
 
+        // Cria episódios
         val episodes = document.select("div.itemlistepisode a").mapIndexed { index, ep ->
             newEpisode {
                 this.url = ep.attr("href")
@@ -54,28 +52,26 @@ class AnimesRollProvider : MainAPI() {
             }
         }
 
-        return AnimeLoadResponse(
+        val episodesMap = mutableMapOf(DubStatus.Subbed to episodes)
+
+        // Retorna LoadResponse usando a API nova
+        return newAnimeLoadResponse(
             name = title,
             url = url,
-            apiName = name,
             type = TvType.Anime,
-            episodes = episodes,
-            posterUrl = poster
+            posterUrl = poster,
+            episodes = episodesMap
         )
     }
 
+    // Converte elementos HTML em SearchResponse
     private fun Element.toSearchResult(isEpisode: Boolean = false): SearchResponse? {
         val link = selectFirst("a")?.attr("href") ?: return null
         val title = selectFirst("h1")?.text() ?: return null
         val poster = selectFirst("img")?.attr("src")
 
-        return AnimeSearchResponse(
-            name = title,
-            url = link,
-            apiName = name,
-            type = TvType.Anime,
+        return newAnimeSearchResponse(title, link, TvType.Anime) {
             posterUrl = poster
-        ).apply {
             if (isEpisode) {
                 addDubStatus(dubExist = false, subExist = true)
             }
