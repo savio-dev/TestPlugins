@@ -1,8 +1,21 @@
-{
-  "name": "sephiroth repo",
-  "description": "sephiroth br repository",
-  "manifestVersion": 1,
-  "pluginLists": [
-    "https://raw.githubusercontent.com/savio-dev/TestPlugins/refs/heads/master/builds/plugins.json"
-  ]
-}
+[
+    {
+        "iconUrl": "https://www.anroll.net/favicon.ico",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/savio-dev/TestPlugins",
+        "fileSize": 7716,
+        "status": 3,
+        "language": "pt-br",
+        "authors": [
+            "Sephiroth"
+        ],
+        "tvTypes": [
+            "Anime"
+        ],
+        "version": 1,
+        "internalName": "AnimesRollProvider",
+        "description": "Plugin para o site AnimesROLL",
+        "url": "https://raw.githubusercontent.com/savio-dev/TestPlugins/builds/AnimesRollProvider.cs3",
+        "name": "AnimesRollProvider"
+    }
+]
