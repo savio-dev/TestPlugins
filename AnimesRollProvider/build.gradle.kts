@@ -1,4 +1,4 @@
-version = "1.0"
+version = "1"
 
 cloudstream {
     description = "Plugin para o site AnimesROLL"
