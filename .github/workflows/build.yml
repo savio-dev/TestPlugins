@@ -44,15 +44,13 @@ jobs:
       # 6️⃣ Build Plugins e gerar JAR
       - name: Build Plugins
         run: |
-          cd $GITHUB_WORKSPACE/src/AnimesRollProvider   # entra na pasta do plugin
+          cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          # Gera .cs3 e plugins.json
-          ./gradlew make makePluginsJson
-          # Gera .jar do plugin usando a task Kotlin DSL
-          ./gradlew buildPluginJar
-          # Copia os artefatos para builds/
-          cp build/libs/*.jar $GITHUB_WORKSPACE/src/builds/ || true
-          cp build/plugins.json $GITHUB_WORKSPACE/src/builds/ || true
+          # Rodar tasks apenas no subprojeto do plugin
+          ./gradlew :AnimesRollProvider:make :AnimesRollProvider:makePluginsJson :AnimesRollProvider:buildPluginJar
+          # Copiar artefatos para builds/
+          cp AnimesRollProvider/build/libs/*.jar $GITHUB_WORKSPACE/src/builds/ || true
+          cp AnimesRollProvider/build/plugins.json $GITHUB_WORKSPACE/src/builds/ || true
 
       # 7️⃣ Commit e push na mesma branch
       - name: Commit and push builds
