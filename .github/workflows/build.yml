@@ -56,27 +56,4 @@ jobs:
           jar cf AnimesRollPlugin.jar -C jar_temp .
           mv AnimesRollPlugin.jar $GITHUB_WORKSPACE/src/builds/ || true
           # Copia .cs3 para builds/
-          cp *.cs3 $GITHUB_WORKSPACE/src/builds/ || true
-
-      # 7️⃣ Generate repo.json
-      - name: Generate repo.json
-        run: |
-          cd $GITHUB_WORKSPACE/src
-          chmod +x gradlew
-          ./gradlew makePluginsJson
-          cp build/plugins.json $GITHUB_WORKSPACE/src/builds/repo.json || true
-
-      # 8️⃣ Copy plugin.json if exists
-      - name: Copy plugin.json
-        run: |
-          cp AnimesRollProvider/build/plugins.json $GITHUB_WORKSPACE/src/builds/plugins.json || echo "plugin.json not found, skipping"
-
-      # 9️⃣ Commit e push builds
-      - name: Commit and push builds
-        run: |
-          cd $GITHUB_WORKSPACE/src
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add builds/
-          git commit -m "Build $GITHUB_SHA" || exit 0
-          git push
+          cp
