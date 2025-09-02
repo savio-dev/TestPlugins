@@ -41,26 +41,36 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      # 6️⃣ Build Plugins: .cs3, plugins.json e JAR
-      - name: Build Plugins
+      # 6️⃣ Build Plugins: .cs3 e .jar
+      - name: Build Plugin .cs3 and JAR
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          # Gera o .cs3
+          # Gera o .cs3 do plugin
           ./gradlew :AnimesRollProvider:make
-          # Gera plugins.json se existir
-          ./gradlew :AnimesRollProvider:makePluginsJson || echo "makePluginsJson task not found, skipping"
-          # Gera JAR manualmente
+          # Gera JAR do plugin, se possível
           cd AnimesRollProvider/build
           mkdir -p jar_temp
           cp -r classes.dex jar_temp/ || echo "classes.dex not found, skipping JAR creation"
           jar cf AnimesRollPlugin.jar -C jar_temp .
           mv AnimesRollPlugin.jar $GITHUB_WORKSPACE/src/builds/ || true
-          # Copia .cs3 e plugins.json para builds/
+          # Copia .cs3 para builds/
           cp *.cs3 $GITHUB_WORKSPACE/src/builds/ || true
-          cp ../plugins.json $GITHUB_WORKSPACE/src/builds/ || true
 
-      # 7️⃣ Commit e push na mesma branch
+      # 7️⃣ Generate repo.json
+      - name: Generate repo.json
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          chmod +x gradlew
+          ./gradlew makePluginsJson
+          cp build/plugins.json $GITHUB_WORKSPACE/src/builds/repo.json || true
+
+      # 8️⃣ Copy plugin.json if exists
+      - name: Copy plugin.json
+        run: |
+          cp AnimesRollProvider/build/plugins.json $GITHUB_WORKSPACE/src/builds/plugins.json || echo "plugin.json not found, skipping"
+
+      # 9️⃣ Commit e push builds
       - name: Commit and push builds
         run: |
           cd $GITHUB_WORKSPACE/src
