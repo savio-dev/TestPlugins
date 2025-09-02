@@ -4,6 +4,7 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils
 import org.jsoup.nodes.Element
 
+@CloudstreamPlugin
 class AnimesRollProvider : MainAPI() {
     override var mainUrl = "https://www.anroll.net"
     override var name = "AnimesROLL"
