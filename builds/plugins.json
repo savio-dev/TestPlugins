@@ -15,7 +15,7 @@
         "version": 1,
         "internalName": "AnimesRollProvider",
         "description": "Plugin para o site AnimesROLL",
-        "url": "https://raw.githubusercontent.com/savio-dev/TestPlugins/builds/AnimesRollProvider.cs3",
+        "url": "https://github.com/savio-dev/TestPlugins/raw/refs/heads/master/builds/AnimesRollProvider.cs3",
         "name": "AnimesRollProvider"
     }
 ]
