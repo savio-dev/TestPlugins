@@ -3,7 +3,7 @@
         "iconUrl": "https://www.anroll.net/favicon.ico",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/savio-dev/TestPlugins",
-        "fileSize": 7717,
+        "fileSize": 7716,
         "status": 3,
         "language": "pt-br",
         "authors": [
@@ -12,7 +12,7 @@
         "tvTypes": [
             "Anime"
         ],
-        "version": -1,
+        "version": 1,
         "internalName": "AnimesRollProvider",
         "description": "Plugin para o site AnimesROLL",
         "url": "https://raw.githubusercontent.com/savio-dev/TestPlugins/builds/AnimesRollProvider.cs3",
