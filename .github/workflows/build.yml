@@ -41,17 +41,24 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      # 6️⃣ Build Plugins, gerar .cs3 e JAR
+      # 6️⃣ Build Plugins: .cs3, plugins.json e JAR
       - name: Build Plugins
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          # Rodar a task make do subprojeto, que gera .cs3 e .jar
+          # Gera o .cs3
           ./gradlew :AnimesRollProvider:make
-          # Copiar artefatos para builds/
-          cp AnimesRollProvider/build/*.cs3 $GITHUB_WORKSPACE/src/builds/ || true
-          cp AnimesRollProvider/build/libs/*.jar $GITHUB_WORKSPACE/src/builds/ || true
-          cp AnimesRollProvider/build/plugins.json $GITHUB_WORKSPACE/src/builds/ || true
+          # Gera plugins.json se existir
+          ./gradlew :AnimesRollProvider:makePluginsJson || echo "makePluginsJson task not found, skipping"
+          # Gera JAR manualmente
+          cd AnimesRollProvider/build
+          mkdir -p jar_temp
+          cp -r classes.dex jar_temp/ || echo "classes.dex not found, skipping JAR creation"
+          jar cf AnimesRollPlugin.jar -C jar_temp .
+          mv AnimesRollPlugin.jar $GITHUB_WORKSPACE/src/builds/ || true
+          # Copia .cs3 e plugins.json para builds/
+          cp *.cs3 $GITHUB_WORKSPACE/src/builds/ || true
+          cp ../plugins.json $GITHUB_WORKSPACE/src/builds/ || true
 
       # 7️⃣ Commit e push na mesma branch
       - name: Commit and push builds
