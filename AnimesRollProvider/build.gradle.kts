@@ -2,7 +2,7 @@ version = 1
 
 cloudstream {
     description = "Plugin para o site AnimesROLL"
-    language = "pt"
+    language = "pt-br"
     authors = listOf("Sephiroth")
     pluginName = "AnimesROLL"
     tvTypes = listOf("Anime")
