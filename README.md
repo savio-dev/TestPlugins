@@ -21,4 +21,4 @@ Plugin para o aplicativo [CloudStream](https://github.com/recloudstream/cloudstr
 - É compilado automaticamente pelo **GitHub Actions**.
 
 ## 📝 Créditos
-- Baseado no [CloudStream Plugin Template](https://github.com/recloudstream/plugin-template).
+- Baseado no [CloudStream Plugin Template](https://github.com/recloudstream/TestPlugins)
